@@ -1,16 +1,20 @@
-from charminator import extract
-from pathlib import Path
-import pandas as pd
-from time import time
-import pyarrow as pa
-from charminator.table import CharTable
+import os
+import pathlib
 
-def test_table():
-    tbl = CharTable(100)
-    print(tbl)
+SAMPLE = pathlib.Path(__file__).parent.resolve() / 'sample.pdf'
 
 def test_load():
-    path = (str(Path('./tests/sample.pdf').resolve())).encode('utf-8')
+    import os
+    print()
+    print(os.getcwd())
+
+    from pathlib import Path
+    from time import time
+
+    from pdfextract import extract
+    from pdfextract.table import CharTable
+
+    path = (str(SAMPLE)).encode('utf-8')
 
     start = time()
     pages_out, chars_out, objs_out, fonts_out = extract(path)

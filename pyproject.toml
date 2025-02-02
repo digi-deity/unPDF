@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools", "Cython"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = 'pdf-extract'
+version = "1.0.0"
+requires-python = ">= 3.9"
+
+[tool.setuptools.packages.find]
+include = ["pdfextract"]
+
+[tool.setuptools.exclude-package-data]
+pdfextract = ["*.c", "*.pxd", "*.pyx"]
+
+[tool.cibuildwheel]
+test-command = "pytest {project}/tests"
+test-requires = "pytest"
+# Disable building PyPy wheels on all platforms
+skip = "pp*"
