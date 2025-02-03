@@ -1,5 +1,4 @@
 import numpy as np
-import pyarrow as pa
 
 class PageTable:
     def __init__(self, n):
@@ -78,6 +77,8 @@ class CharTable:
 
     @property
     def table(self):
+        import pyarrow as pa
+
         arrays = self.arrays.copy()
         arrays['char'] = arrays['char'].tobytes().decode('utf32')
 

@@ -6,15 +6,15 @@ build-backend = "setuptools.build_meta"
 name = 'pdf-extract'
 version = "1.0.0"
 requires-python = ">= 3.9"
+dependencies = [
+    "numpy",
+]
 
 [tool.setuptools.packages.find]
 include = ["pdfextract"]
 
 [tool.setuptools.exclude-package-data]
 pdfextract = ["*.c", "*.pxd", "*.pyx"]
-
-[tool.cibuildwheel.linux]
-repair-wheel-command = ""
 
 [tool.cibuildwheel]
 test-command = "pytest {project}/tests"
