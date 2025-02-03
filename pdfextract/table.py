@@ -12,7 +12,10 @@ class PageTable:
             'top': np.ndarray((n,), dtype=np.single),
         }
 
-        self.table = pa.Table.from_pydict({k: pa.array(v) for k, v in self.arrays.items()})
+    @property
+    def table(self):
+        import pyarrow as pa
+        return pa.Table.from_pydict({k: pa.array(v) for k, v in self.arrays.items()})
 
 class FontTable:
     def __init__(self, uq_fontptr: np.ndarray):
@@ -29,6 +32,7 @@ class FontTable:
 
     @property
     def table(self):
+        import pyarrow as pa
         return pa.Table.from_pydict({k: pa.array(v) for k, v in self.arrays.items()})
 
 class TextObjTable:
@@ -52,7 +56,10 @@ class TextObjTable:
             'tmatrix_f': np.ndarray((n,), dtype=np.single),
         }
 
-        self.table = pa.Table.from_pydict({k: pa.array(v) for k, v in self.arrays.items()})
+    @property
+    def table(self):
+        import pyarrow as pa
+        return pa.Table.from_pydict({k: pa.array(v) for k, v in self.arrays.items()})
 
 class CharTable:
     def __init__(self, n):
