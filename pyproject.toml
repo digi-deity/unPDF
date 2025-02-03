@@ -13,6 +13,9 @@ include = ["pdfextract"]
 [tool.setuptools.exclude-package-data]
 pdfextract = ["*.c", "*.pxd", "*.pyx"]
 
+[tool.cibuildwheel.linux]
+repair-wheel-command = ""
+
 [tool.cibuildwheel]
 test-command = "pytest {project}/tests"
 test-requires = "pytest"

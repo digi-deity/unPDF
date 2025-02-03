@@ -54,8 +54,8 @@ class TextObjTable:
         }
 
         self.table = pa.Table.from_pydict({k: pa.array(v) for k, v in self.arrays.items()})
-class CharTable:
 
+class CharTable:
     def __init__(self, n):
         self.arrays = {
             'page': np.ndarray((n,), dtype=np.intc),
