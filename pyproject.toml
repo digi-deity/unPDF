@@ -17,12 +17,14 @@ include = ["pdfextract"]
 pdfextract = ["*.c", "*.pxd", "*.pyx"]
 
 [tool.cibuildwheel]
-#test-command = "DYLD_LIBRARY_PATH=$REPAIR_LIBRARY_PATH pytest {project}/tests"
-linux.repair-wheel-command = ""
-test-requires = "pytest"
 linux.archs = ["x86_64", "aarch64"]
-windows.archs = ["AMD64", "x86", "ARM64"]
-# macos.archs = ["arm64"] # Don't know how to fix issues with arm64
-#manylinux-aarch64-image = "quay.io/pypa/manylinux2014_aarch64:2025.02.02-1"  # For same reason 2024 default segfaults
-#macos.environment = {REPAIR_LIBRARY_PATH = "lib/pdfium/lib/"}
-#macos.repair-wheel-command = "DYLD_LIBRARY_PATH=$REPAIR_LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"
+windows.archs = ["AMD64", "ARM64"]
+macos.archs = ["arm64"]
+
+test-command = "pytest {project}/tests"
+test-requires = "pytest"
+
+linux.repair-wheel-command = ""
+windows.repair-wheel-command = ""
+macos.environment = {REPAIR_LIBRARY_PATH = "lib/pdfium/lib/"}
+macos.repair-wheel-command = "DYLD_LIBRARY_PATH=$REPAIR_LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"
