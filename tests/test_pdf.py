@@ -6,7 +6,7 @@ from pdfextract import extract
 SAMPLE = pathlib.Path(__file__).parent.resolve() / 'sample.pdf'
 
 def test_load():
-    path = (str(SAMPLE)).encode('utf-8')
+    path = str(SAMPLE)
     pages_out, chars_out, objs_out, fonts_out = extract(path)
 
     assert len(chars_out.arrays['char']) == 2913

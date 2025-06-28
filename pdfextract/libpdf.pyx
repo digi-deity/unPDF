@@ -4,6 +4,7 @@
 
 import atexit
 
+import pathlib
 import numpy as np
 
 from . cimport cpdfium
@@ -248,10 +249,7 @@ cdef _extract_pages(cpdfium.FPDF_TEXTPAGE* buf_textpages, int count):
     return chars_tbl, objs_tbl, fonts_tbl
 
 
-#cdef _render_pages(cpdfium.FPDF_PAGE* buf_pages, int count):
-#    pass
-
-cpdef extract(char* path):
+cpdef _extract(char* path):
     global _initialized
     assert _initialized, "Library was not initialized"
 
