@@ -17,6 +17,8 @@ include = ["pdfextract"]
 pdfextract = ["*.c", "*.pxd", "*.pyx"]
 
 [tool.cibuildwheel]
+skip = ["cp39-musllinux*", "cp310-musllinux*"]
+
 linux.archs = ["x86_64", "aarch64"]
 windows.archs = ["AMD64", "ARM64"]
 macos.archs = ["arm64"]
