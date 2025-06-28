@@ -2,6 +2,7 @@ graft lib/pdfium
 
 include pdfextract/*.so
 include pdfextract/*.dll
+include pdfextract/*.dylib
 include pdfextract/*.py[dx]
 
 exclude pdfextract/*.c

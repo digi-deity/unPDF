@@ -35,8 +35,6 @@ cdef extern from "fpdfview.h":
         void* m_pPlatform
         FPDF_RENDERER_TYPE m_RendererType
 
-
-
     void FPDF_InitLibraryWithConfig(const FPDF_LIBRARY_CONFIG * config) nogil
     void FPDF_DestroyLibrary() nogil
     unsigned long FPDF_GetLastError() nogil
@@ -80,7 +78,6 @@ cdef extern from "fpdf_edit.h":
     FPDF_BOOL FPDFPageObj_GetMatrix(FPDF_PAGEOBJECT page_object, FS_MATRIX* matrix) nogil
     FPDF_BOOL FPDFTextObj_GetFontSize(FPDF_PAGEOBJECT text, float * size) nogil
     FPDF_BOOL FPDFPageObj_GetFillColor(FPDF_PAGEOBJECT page_object, unsigned int* R, unsigned int* G, unsigned int* B, unsigned int* A) nogil
-
     size_t FPDFFont_GetBaseFontName(FPDF_FONT font, char * buffer, size_t length) nogil
     size_t FPDFFont_GetFamilyName(FPDF_FONT font, char * buffer, size_t length) nogil
     int FPDFFont_GetFlags(FPDF_FONT font) nogil
