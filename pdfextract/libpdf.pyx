@@ -3,9 +3,8 @@
 # cython: wraparound=False
 
 import atexit
-
-import pathlib
-import numpy as np
+import array
+from cpython cimport array
 
 from . cimport cpdfium
 from .table import CharTable, TextObjTable, FontTable, PageTable
@@ -44,17 +43,16 @@ cdef _extract_chars(cpdfium.FPDF_TEXTPAGE* buf_textpages, int count):
     cdef int i, j, k, n, offset, total_chars
 
 
-    np_pagechars = np.ndarray((count+1,), dtype=np.intc)
-    cdef int[:] buf_pagechars = np_pagechars
-
-    buf_pagechars[0] = 0
+    cdef array.array arr_pagechars = array.array('i', [0] * (count + 1))
+    cdef int[:] buf_pagechars = arr_pagechars
+    cdef array.array arr_pageoffset = array.array('l', [0] * (count + 1))
+    cdef long[:] buf_pageoffset = arr_pageoffset
 
     for i in range(count):
         textpage = buf_textpages[i]
         buf_pagechars[i+1] = cpdfium.FPDFText_CountChars(textpage)
+        buf_pageoffset[i+1] = buf_pageoffset[i] + buf_pagechars[i+1]
 
-    np_pageoffset = np_pagechars.cumsum(dtype=np.long)
-    cdef long[:] buf_pageoffset = np_pageoffset
     total_chars = buf_pageoffset[count]
 
     tbl = CharTable(total_chars)
@@ -99,6 +97,9 @@ cdef _extract_chars(cpdfium.FPDF_TEXTPAGE* buf_textpages, int count):
                        &buf_bbox_ok[0], &buf_loose_bbox_ok[0],
                        &buf_hyphen[0], &buf_unicodemaperror[0])
 
+    free(iter_pages)
+    free(iter_idx)
+
     return tbl
 
 cdef inline void _fill_chars_data(cpdfium.FPDF_TEXTPAGE textpage, int offset, int i,
@@ -124,18 +125,20 @@ cdef inline void _fill_chars_data(cpdfium.FPDF_TEXTPAGE textpage, int offset, in
     buf_hyphen[offset] = cpdfium.FPDFText_IsHyphen(textpage, i)
     buf_unicodemaperror[offset] = cpdfium.FPDFText_HasUnicodeMapError(textpage, i)
 
-cdef _extract_textobjs(np_objptr):
-    np_uq_objptr = np.unique(np_objptr)
-    if np_uq_objptr[0] == 0:
-        np_uq_objptr = np_uq_objptr[1:]  # Filter out null pointer
+cdef _extract_textobjs(arr_objptr):
+    py_uq_objptr = filter(None, sorted(set(arr_objptr)))  # Filter because we want to evict null pointer
+    cdef array.array arr_uq_objptr = array.array('Q', py_uq_objptr)
 
-    cdef int n_objs = len(np_uq_objptr)
+    if arr_uq_objptr[0] == 0:
+        arr_uq_objptr = arr_uq_objptr[1:]  # Filter out null pointer
+
+    cdef int n_objs = len(arr_uq_objptr)
 
     # Prepare numpy arrays
-    tbl = TextObjTable(np_uq_objptr)
+    tbl = TextObjTable(arr_uq_objptr)
 
     # Create memory views
-    cdef uint64_t[:] uq_objptrs = np_uq_objptr
+    cdef uint64_t[:] uq_objptrs = arr_uq_objptr
     cdef float[:] buf_fontsize = tbl.arrays['fontsize']
     cdef int[:] buf_transparency = tbl.arrays['has_transparency']
     cdef uint64_t[:] buf_fontptr = tbl.arrays['font_obj_id']
@@ -186,24 +189,23 @@ cdef void _fill_textobjs_data(cpdfium.FPDF_PAGEOBJECT* ptrs, int n,
         buf_tmatrix_e[i] = tmatrix.e
         buf_tmatrix_f[i] = tmatrix.f
 
-cdef _extract_fonts(np_fontptr):
-    np_uq_fontptr = np.unique(np_fontptr)
-    if np_uq_fontptr[0] == 0:
-        np_uq_fontptr = np_uq_fontptr[1:]  # Filter out null pointer
+cdef _extract_fonts(arr_fontptr):
+    py_uq_fontptr = filter(None, sorted(set(arr_fontptr)))  # Filter because we want to evict null pointer
+    cdef array.array arr_uq_fontptr = array.array('Q', py_uq_fontptr)
 
-    cdef int n_fonts = len(np_uq_fontptr)
+    cdef int n_fonts = len(arr_uq_fontptr)
 
-    cdef uint64_t[:] uq_fontptr = np_uq_fontptr
+    cdef uint64_t[:] uq_fontptr = arr_uq_fontptr
 
     # Prepare numpy arrays
-    tbl = FontTable(np_uq_fontptr)
+    tbl = FontTable(arr_uq_fontptr)
 
     # Create memory views
     cdef int[:] buf_flags = tbl.arrays['flags']
     cdef int[:] buf_weight = tbl.arrays['weight']
     cdef int[:] buf_italic_angle = tbl.arrays['italic_angle']
-    cdef object[:] buf_basefontname = tbl.arrays['base_fontname']
-    cdef object[:] buf_familyfontname = tbl.arrays['family_fontname']
+    cdef list[str] buf_basefontname = tbl.arrays['base_fontname']
+    cdef list[str] buf_familyfontname = tbl.arrays['family_fontname']
 
     _fill_fonts_data(<cpdfium.FPDF_FONT *> &uq_fontptr[0], n_fonts,
                      &buf_flags[0], &buf_weight[0], &buf_italic_angle[0],
@@ -214,7 +216,7 @@ cdef _extract_fonts(np_fontptr):
 
 cdef void _fill_fonts_data(cpdfium.FPDF_FONT* ptrs, int n,
                            int* buf_flags, int* buf_weight, int* buf_italic_angle,
-                           object[:] buf_basefontname, object[:] buf_familyfontname):
+                           list[str] buf_basefontname, list[str] buf_familyfontname):
     cdef int i
     cdef char* buffer = <char*> malloc(sizeof(char) * 512)
     cdef bytes py_string
@@ -237,6 +239,8 @@ cdef void _fill_fonts_data(cpdfium.FPDF_FONT* ptrs, int n,
             length -= 1
         py_string = buffer[:length]
         buf_familyfontname[i] = py_string.decode('utf-8')
+    
+    free(buffer)
 
 
 cdef _extract_pages(cpdfium.FPDF_TEXTPAGE* buf_textpages, int count):

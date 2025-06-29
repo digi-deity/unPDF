@@ -6,9 +6,6 @@ build-backend = "setuptools.build_meta"
 name = 'pdf-extract'
 version = "1.0.0rc1"
 requires-python = ">= 3.9"
-dependencies = [
-    "numpy",
-]
 
 [tool.setuptools.packages.find]
 include = ["pdfextract"]
@@ -24,7 +21,7 @@ windows.archs = ["AMD64", "ARM64"]
 macos.archs = ["arm64"]
 
 test-command = "pytest {project}/tests"
-test-requires = "pytest"
+test-requires = ["pytest", "pyarrow"]
 
 linux.repair-wheel-command = ""
 windows.repair-wheel-command = ""

@@ -1,15 +1,15 @@
-import numpy as np
+import array
 
 class PageTable:
     def __init__(self, n):
         self.arrays = {
-            'page': np.arange(n, dtype=np.intc),
-            'width': np.ndarray((n,), dtype=np.single),
-            'height': np.ndarray((n,), dtype=np.single),
-            'left': np.ndarray((n,), dtype=np.single),
-            'right': np.ndarray((n,), dtype=np.single),
-            'bottom': np.ndarray((n,), dtype=np.single),
-            'top': np.ndarray((n,), dtype=np.single),
+            'page': array.array('i', [0] * n),
+            'width': array.array('f', [0.0] * n),
+            'height': array.array('f', [0.0] * n),
+            'left': array.array('f', [0.0] * n),
+            'right': array.array('f', [0.0] * n),
+            'bottom': array.array('f', [0.0] * n),
+            'top': array.array('f', [0.0] * n),
         }
 
     @property
@@ -18,16 +18,16 @@ class PageTable:
         return pa.Table.from_pydict({k: pa.array(v) for k, v in self.arrays.items()})
 
 class FontTable:
-    def __init__(self, uq_fontptr: np.ndarray):
+    def __init__(self, uq_fontptr: array.array):
         n = len(uq_fontptr)
 
         self.arrays = {
             'font_obj_id': uq_fontptr,
-            'flags': np.ndarray((n,), dtype=np.intc),
-            'weight': np.ndarray((n,), dtype=np.intc),
-            'italic_angle': np.ndarray((n,), dtype=np.intc),
-            'base_fontname': np.ndarray((n,), dtype=object),
-            'family_fontname': np.ndarray((n,), dtype=object),
+            'flags': array.array('i', [0] * n),
+            'weight': array.array('i', [0] * n),
+            'italic_angle': array.array('i', [0] * n),
+            'base_fontname': [None] * n,
+            'family_fontname': [None] * n,
         }
 
     @property
@@ -36,24 +36,24 @@ class FontTable:
         return pa.Table.from_pydict({k: pa.array(v) for k, v in self.arrays.items()})
 
 class TextObjTable:
-    def __init__(self, uq_objptr: np.ndarray):
+    def __init__(self, uq_objptr: array.array):
         n = len(uq_objptr)
 
         self.arrays = {
             'txt_obj_id': uq_objptr,
-            'fontsize': np.ndarray((n,), dtype=np.single),
-            'has_transparency': np.ndarray((n,), dtype=np.intc),
-            'font_obj_id': np.ndarray((n,), dtype=np.uint64),
-            'color_R': np.ndarray((n,), dtype=np.uintc),
-            'color_G': np.ndarray((n,), dtype=np.uintc),
-            'color_B': np.ndarray((n,), dtype=np.uintc),
-            'color_A': np.ndarray((n,), dtype=np.uintc),
-            'tmatrix_a': np.ndarray((n,), dtype=np.single),
-            'tmatrix_b': np.ndarray((n,), dtype=np.single),
-            'tmatrix_c': np.ndarray((n,), dtype=np.single),
-            'tmatrix_d': np.ndarray((n,), dtype=np.single),
-            'tmatrix_e': np.ndarray((n,), dtype=np.single),
-            'tmatrix_f': np.ndarray((n,), dtype=np.single),
+            'fontsize': array.array('f', [0.0] * n),
+            'has_transparency': array.array('i', [0] * n),
+            'font_obj_id': array.array('Q', [0] * n),
+            'color_R': array.array('I', [0] * n),
+            'color_G': array.array('I', [0] * n),
+            'color_B': array.array('I', [0] * n),
+            'color_A': array.array('I', [0] * n),
+            'tmatrix_a': array.array('f', [0.0] * n),
+            'tmatrix_b': array.array('f', [0.0] * n),
+            'tmatrix_c': array.array('f', [0.0] * n),
+            'tmatrix_d': array.array('f', [0.0] * n),
+            'tmatrix_e': array.array('f', [0.0] * n),
+            'tmatrix_f': array.array('f', [0.0] * n),
         }
 
     @property
@@ -64,22 +64,22 @@ class TextObjTable:
 class CharTable:
     def __init__(self, n):
         self.arrays = {
-            'page': np.ndarray((n,), dtype=np.intc),
-            'char': np.ndarray((n,), dtype=np.uintc),
-            'is_generated': np.ndarray((n,), dtype=np.intc),
-            'txt_obj_id': np.ndarray((n,), dtype=np.uint64),
-            'left': np.ndarray((n,), dtype=np.double),
-            'right': np.ndarray((n,), dtype=np.double),
-            'bottom': np.ndarray((n,), dtype=np.double),
-            'top': np.ndarray((n,), dtype=np.double),
-            'loose_left': np.ndarray((n,), dtype=np.single),
-            'loose_right': np.ndarray((n,), dtype=np.single),
-            'loose_bottom': np.ndarray((n,), dtype=np.single),
-            'loose_top': np.ndarray((n,), dtype=np.single),
-            'bbox_ok': np.ndarray((n,), dtype=np.intc),
-            'loose_bbox_ok': np.ndarray((n,), dtype=np.intc),
-            'hyphen': np.ndarray((n,), dtype=np.intc),
-            'has_unicode_map_error': np.ndarray((n,), dtype=np.intc),
+            'page': array.array('i', [0] * n),
+            'char': array.array('I', [0] * n),
+            'is_generated': array.array('i', [0] * n),
+            'txt_obj_id': array.array('Q', [0] * n),
+            'left': array.array('d', [0.0] * n),
+            'right': array.array('d', [0.0] * n),
+            'bottom': array.array('d', [0.0] * n),
+            'top': array.array('d', [0.0] * n),
+            'loose_left': array.array('f', [0.0] * n),
+            'loose_right': array.array('f', [0.0] * n),
+            'loose_bottom': array.array('f', [0.0] * n),
+            'loose_top': array.array('f', [0.0] * n),
+            'bbox_ok': array.array('i', [0] * n),
+            'loose_bbox_ok': array.array('i', [0] * n),
+            'hyphen': array.array('i', [0] * n),
+            'has_unicode_map_error': array.array('i', [0] * n),
         }
 
     @property
