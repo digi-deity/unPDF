@@ -48,17 +48,6 @@ if tgz.exists():
     shutil.rmtree(pdfium_lib_dir / 'pdfium', ignore_errors=True)
     with tarfile.open(tgz, 'r:gz') as f:
         f.extractall(pdfium_lib_dir / 'pdfium')
-
-    for p in [
-        pdfium_lib_dir / 'pdfium' / 'lib' / 'libpdfium.so',
-        pdfium_lib_dir / 'pdfium' / 'bin' / 'pdfium.dll',
-        pdfium_lib_dir / 'pdfium' / 'lib' / 'libpdfium.dylib',
-    ]:
-        if pathlib.Path(p).exists():
-            shutil.copy(p, 'unpdf/')
-            break
-    else:
-        print(f"PDFium library not found in the expected locations: Please confirm extraction.")
 else:
     print(f"Expected PDFium distribution at {tgz}. Please make sure it exists in the 'lib' directory.")
 

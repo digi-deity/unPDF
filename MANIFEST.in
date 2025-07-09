@@ -1,9 +1,6 @@
 graft lib/pdfium
 graft lib/
 
-include unpdf/*.so
-include unpdf/*.dll
-include unpdf/*.dylib
 include unpdf/*.py[dx]
 
 exclude unpdf/*.c

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "unPDF"
-version = "1.0.0rc2"
+version = "1.0.0rc3"
 requires-python = ">= 3.9"
 description = "Quickly extract text characters and character metadata from pdfs using pdfium."
 authors = [
@@ -26,14 +26,21 @@ pdfextract = ["*.c", "*.pxd", "*.pyx"]
 [tool.cibuildwheel]
 skip = ["cp39-musllinux*", "cp310-musllinux*"]
 
-linux.archs = ["x86_64", "aarch64"]
-windows.archs = ["AMD64", "ARM64"]
-macos.archs = ["arm64"]
-
 test-command = "pytest {project}/tests"
 test-requires = ["pytest", "pyarrow"]
 
-linux.repair-wheel-command = ""
-windows.repair-wheel-command = ""
-macos.environment = {REPAIR_LIBRARY_PATH = "lib/pdfium/lib/"}
-macos.repair-wheel-command = "DYLD_LIBRARY_PATH=$REPAIR_LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"
+[tool.cibuildwheel.windows]
+archs = ["AMD64", "ARM64"]
+before-build = "pip install delvewheel"
+environment = {REPAIR_LIBRARY_PATH = "lib/pdfium/bin/"}
+repair-wheel-command = "delvewheel repair --add-path %REPAIR_LIBRARY_PATH% -w {dest_dir} {wheel}"
+
+[tool.cibuildwheel.linux]
+archs = ["x86_64", "aarch64"]
+environment = {REPAIR_LIBRARY_PATH = "lib/pdfium/lib/"}
+repair-wheel-command = "LD_LIBRARY_PATH=$PWD/$REPAIR_LIBRARY_PATH auditwheel repair -w {dest_dir} {wheel}"
+
+[tool.cibuildwheel.macos]
+archs = ["arm64"]
+environment = {REPAIR_LIBRARY_PATH = "lib/pdfium/lib/"}
+repair-wheel-command = "DYLD_LIBRARY_PATH=$PWD/$REPAIR_LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"
