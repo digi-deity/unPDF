@@ -3,12 +3,22 @@ requires = ["setuptools", "Cython"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = 'pdf-extract'
-version = "1.0.0rc1"
+name = "pdf-extract"
+version = "1.0.0rc2"
 requires-python = ">= 3.9"
+description = "Quickly extract text characters and character metadata from pdfs using pdfium."
+authors = [
+    {name = "Laurens Janssen", email = "digi-deity@laurens.xyz"}
+]
+license = {text = "Apache-2.0"}
+readme = "README.md"
+
+[project.urls]
+Repository = "https://github.com/digi-deity/pdf-extract"
+
 
 [tool.setuptools.packages.find]
-include = ["pdfextract"]
+include = ["pdf_extract"]
 
 [tool.setuptools.exclude-package-data]
 pdfextract = ["*.c", "*.pxd", "*.pyx"]

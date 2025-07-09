@@ -1,5 +1,5 @@
 import pathlib
-from pdfextract import extract
+from pdf_extract import extract
 
 SAMPLE = pathlib.Path(__file__).parent.resolve() / 'sample.pdf'
 
