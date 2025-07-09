@@ -55,7 +55,7 @@ if tgz.exists():
         pdfium_lib_dir / 'pdfium' / 'lib' / 'libpdfium.dylib',
     ]:
         if pathlib.Path(p).exists():
-            shutil.copy(p, 'pdf_extract/')
+            shutil.copy(p, 'unpdf/')
             break
     else:
         print(f"PDFium library not found in the expected locations: Please confirm extraction.")
@@ -67,8 +67,8 @@ if not pathlib.Path('./lib/pdfium').exists():
 
 extensions = [
        Extension(
-            'pdf_extract.libpdf',
-            sources=["pdf_extract/libpdf.pyx"],
+            'unpdf.libpdf',
+            sources=["unpdf/libpdf.pyx"],
             libraries=libraries,
             runtime_library_dirs=runtime_library_dirs,
             library_dirs=['lib/pdfium/lib/'],

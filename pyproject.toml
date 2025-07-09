@@ -3,7 +3,7 @@ requires = ["setuptools", "Cython"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pdf-extract"
+name = "unPDF"
 version = "1.0.0rc2"
 requires-python = ">= 3.9"
 description = "Quickly extract text characters and character metadata from pdfs using pdfium."
@@ -14,11 +14,11 @@ license = {text = "Apache-2.0"}
 readme = "README.md"
 
 [project.urls]
-Repository = "https://github.com/digi-deity/pdf-extract"
+Repository = "https://github.com/digi-deity/unPDF"
 
 
 [tool.setuptools.packages.find]
-include = ["pdf_extract"]
+include = ["unpdf"]
 
 [tool.setuptools.exclude-package-data]
 pdfextract = ["*.c", "*.pxd", "*.pyx"]

@@ -23,7 +23,7 @@ pip install pdf-extract
 ### Simple Character Extraction
 
 ```python
-from pdf_extract import extract
+from unpdf import extract
 
 # Extract data from PDF
 pages, chars, text_objs, fonts = extract("document.pdf")
@@ -41,7 +41,7 @@ print(f"Page height: {pages.arrays['height'][0]}")
 ### Reconstructing Text
 
 ```python
-from pdf_extract import extract
+from unpdf import extract
 
 _, chars, _, _ = extract("document.pdf")
 
@@ -53,7 +53,7 @@ print(text)
 ### Character Positioning
 
 ```python
-from pdf_extract import extract
+from unpdf import extract
 
 _, chars, _, _ = extract("document.pdf")
 
@@ -64,7 +64,7 @@ for i in range(len(chars.arrays['char'])):
     top = chars.arrays['top'][i]
     right = chars.arrays['right'][i]
     bottom = chars.arrays['bottom'][i]
-    
+
     print(f"'{char}' at ({left:.1f}, {top:.1f}) - ({right:.1f}, {bottom:.1f})")
 ```
 
@@ -74,7 +74,7 @@ For data analysis and advanced processing, it is recommended to convert to first
 Note that PyArrow must be installed separately. From PyArrow tables, you can easily convert to pandas or polars DataFrames.
 
 ```python
-from pdf_extract import extract
+from unpdf import extract
 
 pages, chars, text_objs, fonts = extract("document.pdf")
 
@@ -90,6 +90,7 @@ print(chars_table.select(['char', 'left', 'top']))
 
 # Export to different dataframe libraries
 import polars as pl
+
 pandas_char_table = chars_table.to_pandas()  # Convert to pandas DataFrame
 polars_char_table = pl.from_arrow(chars_table)  # Convert to polars DataFrame
 ```

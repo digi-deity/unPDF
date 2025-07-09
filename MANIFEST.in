@@ -1,10 +1,10 @@
 graft lib/pdfium
 graft lib/
 
-include pdf_extract/*.so
-include pdf_extract/*.dll
-include pdf_extract/*.dylib
-include pdf_extract/*.py[dx]
+include unpdf/*.so
+include unpdf/*.dll
+include unpdf/*.dylib
+include unpdf/*.py[dx]
 
-exclude pdf_extract/*.c
-exclude pdf_extract/__pycache__/*
+exclude unpdf/*.c
+exclude unpdf/__pycache__/*
