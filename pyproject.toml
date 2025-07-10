@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "unPDF"
-version = "1.0.0rc3"
+version = "1.0.0"
 requires-python = ">= 3.9"
 description = "Quickly extract text characters and character metadata from pdfs using pdfium."
 authors = [
