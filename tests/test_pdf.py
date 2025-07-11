@@ -1,7 +1,7 @@
 import pathlib
 from unpdf import extract
 
-SAMPLE = pathlib.Path(__file__).parent.resolve() / 'sample.pdf'
+SAMPLE = pathlib.Path(__file__).parent.resolve() / 'pdfs' / 'sample.pdf'
 
 def test_basic_load():
     path = str(SAMPLE)
