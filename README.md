@@ -1,6 +1,15 @@
 # PDF Extract
 
-A lightweight Python library for extracting text characters and metadata from PDF files using PDFium. This library provides detailed character-level information including positions, fonts, colors, and transformation matrices without external dependencies.
+A lightweight Python library for extracting text characters and metadata from PDF files using PDFium.
+This library provides detailed character-level information including positions, fonts, colors, and transformation 
+matrices without external dependencies.
+
+If you are only interested in plain text extraction, consider using PyPDFium2, which is a higher-level wrapper around 
+PDFium which provides a get_text() method for simple plaintext extraction.
+
+If you need more detailed character-level extraction, this library is designed for that purpose. The character loop that
+extracts metadata is implemented in Cython. It is thus far faster than calling the PDFium API directly from Python with
+the PyPDFium2 bindings as evidenced by the [benchmarks](#benchmarks).
 
 ## Features
 
@@ -138,9 +147,29 @@ The library returns four table objects:
 - `italic_angle`: Italic angle
 - `base_fontname`, `family_fontname`: Font names
 
+## Benchmarks
+```
+File: the_wonderful_wizard_of_oz.pdf        Pages: 96
+  unPDF detailed characters duration      : 0.5383 (1.00x) seconds
+  PyPDFium2 detailed characters duration  : 1.8235 (3.39x) seconds
+  PyPDFium2 plaintext duration            : 0.3892 (0.72x) seconds
+filename: nvidia-annual-report-2025.pdf
+
+File: nvidia-annual-report-2025.pdf         Pages: 181
+  unPDF detailed characters duration      : 0.8857 (1.00x) seconds
+  PyPDFium2 detailed characters duration  : 5.5529 (6.27x) seconds
+  PyPDFium2 plaintext duration            : 0.7448 (0.84x) seconds
+filename: jane_eyre.pdf
+
+File: jane_eyre.pdf                         Pages: 691
+  unPDF detailed characters duration      : 1.5499 (1.00x) seconds
+  PyPDFium2 detailed characters duration  : 8.9337 (5.76x) seconds
+  PyPDFium2 plaintext duration            : 1.1905 (0.77x) seconds
+```
+
 ## Requirements
 
-- Python 3.7+
+- Python 3.9+
 - PyArrow (optional, for table functionality)
 
 ## License
